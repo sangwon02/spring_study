@@ -1,0 +1,80 @@
+// 플러그인 설정
+plugins {
+	id 'java'
+	id 'org.springframework.boot' version '3.2.5'
+	id 'io.spring.dependency-management' version '1.1.7'
+	// id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // <- 플러그인 사용 안 함
+}
+
+// 프로젝트 정보
+group = 'umc'
+version = '0.0.1-SNAPSHOT'
+
+// 자바 설정
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(17)
+	}
+}
+
+// 저장소 설정
+repositories {
+	mavenCentral()
+}
+
+// 의존성 구성 설정
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+}
+
+// !!! 생성된 Q-Type 소스 디렉토리 정의 변경 !!!
+def generatedDir = file('src/main/generated') // <- 경로 수정됨
+
+// 의존성 설정
+dependencies {
+	// Spring Boot 기본 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	// MySQL 드라이버
+	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
+
+	// Lombok
+	compileOnly 'org.projectlombok:lombok'
+	annotationProcessor 'org.projectlombok:lombok'
+
+	// Querydsl JPA 및 APT
+	implementation 'com.querydsl:querydsl-jpa:5.0.0:jakarta'
+	annotationProcessor 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+	annotationProcessor 'com.querydsl:querydsl-apt:5.0.0:jakarta'
+
+	// 테스트 의존성
+	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+}
+
+// !!! 소스셋 설정: 변경된 경로 사용 !!!
+sourceSets {
+	main {
+		java {
+			srcDirs += [generatedDir] // 변경된 경로 사용
+		}
+	}
+}
+
+// !!! JavaCompile 태스크 설정: 변경된 경로 사용 !!!
+tasks.withType(JavaCompile) {
+	options.getGeneratedSourceOutputDirectory().set(generatedDir) // 변경된 경로 사용
+}
+
+// !!! clean 태스크 설정: 변경된 경로 사용 !!!
+tasks.named('clean') {
+	delete generatedDir // 변경된 경로 사용
+}
+
+// 테스트 태스크 설정
+tasks.named('test') {
+	useJUnitPlatform()
+}
