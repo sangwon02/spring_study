@@ -3,7 +3,6 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.2.5'
 	id 'io.spring.dependency-management' version '1.1.7'
-	// id "com.ewerk.gradle.plugins.querydsl" version "1.0.10" // <- 플러그인 사용 안 함
 }
 
 // 프로젝트 정보
@@ -30,13 +29,15 @@ configurations {
 }
 
 // !!! 생성된 Q-Type 소스 디렉토리 정의 변경 !!!
-def generatedDir = file('src/main/generated') // <- 경로 수정됨
+def generatedDir = file('src/main/generated')
 
 // 의존성 설정
 dependencies {
 	// Spring Boot 기본 의존성
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
 	// MySQL 드라이버
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
@@ -55,26 +56,25 @@ dependencies {
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-// !!! 소스셋 설정: 변경된 경로 사용 !!!
 sourceSets {
 	main {
 		java {
-			srcDirs += [generatedDir] // 변경된 경로 사용
+			srcDirs += [generatedDir]
 		}
 	}
 }
 
-// !!! JavaCompile 태스크 설정: 변경된 경로 사용 !!!
 tasks.withType(JavaCompile) {
-	options.getGeneratedSourceOutputDirectory().set(generatedDir) // 변경된 경로 사용
+	// Annotation Processor가 생성하는 소스 경로 설정
+	options.getGeneratedSourceOutputDirectory().set(generatedDir)
+	// 컴파일러에 -parameters 인자 추가
+	options.compilerArgs += '-parameters'
 }
 
-// !!! clean 태스크 설정: 변경된 경로 사용 !!!
 tasks.named('clean') {
-	delete generatedDir // 변경된 경로 사용
+	delete generatedDir
 }
 
-// 테스트 태스크 설정
 tasks.named('test') {
 	useJUnitPlatform()
 }

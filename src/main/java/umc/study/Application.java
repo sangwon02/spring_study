@@ -25,21 +25,6 @@ public class Application {
 	// UserQueryService 만 주입받도록 수정
 	public CommandLineRunner run(UserQueryService userQueryService) {
 		return args -> {
-			Long myPageTargetUserId = 1L; // 조회할 사용자 ID
-
-			System.out.println("\n=========== 마이페이지 정보 조회 (User ID: " + myPageTargetUserId + ") ===========");
-			try {
-				MyPageInfoDTO myPageInfo = userQueryService.getMyPageInfo(myPageTargetUserId);
-
-				System.out.println("  - 이름: " + myPageInfo.getName());
-				System.out.println("  - 이메일: " + (myPageInfo.getEmail() != null ? myPageInfo.getEmail() : "없음"));
-				System.out.println("  - 전화번호: " + (myPageInfo.getPhonenumber() != null ? myPageInfo.getPhonenumber() : "없음"));
-				System.out.println("  - 포인트: " + (myPageInfo.getPoint() != null ? myPageInfo.getPoint() : 0));
-
-			} catch (RuntimeException e) {
-				System.out.println(e.getMessage());
-			}
-			System.out.println("========================================================\n");
 
 		};
 	}
