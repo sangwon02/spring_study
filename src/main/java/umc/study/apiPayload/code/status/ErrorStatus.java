@@ -1,4 +1,4 @@
-package umc.study.apiPayload.code.status; // status 패키지
+package umc.study.apiPayload.code.status;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -23,8 +23,19 @@ public enum ErrorStatus implements BaseErrorCode {
     // 예시
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
-    // Temp 관련 에러 (예시 추가)
-    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트");
+    // Temp 관련 에러
+    TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
+
+    // 음식 카테고리 관련 에러
+    FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FOODCATEGORY4001", "해당 음식 카테고리를 찾을 수 없습니다."),
+
+    // 가게 관련 에러 (예시 - 리뷰 추가 시 사용)
+    STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "STORE4001", "가게를 찾을 수 없습니다."),
+
+    // 미션 관련 에러 (신규 추가)
+    MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "MISSION4001", "해당 미션을 찾을 수 없습니다."),
+    STORE_NOT_LINKED_TO_MISSION(HttpStatus.BAD_REQUEST, "MISSION4002", "해당 미션에 연결된 가게 정보가 없습니다."),
+    MISSION_ALREADY_ATTEMPTED(HttpStatus.BAD_REQUEST, "MISSION4003", "이미 도전 중이거나 완료한 미션입니다.");
 
 
     private final HttpStatus httpStatus;
@@ -36,7 +47,7 @@ public enum ErrorStatus implements BaseErrorCode {
         return ErrorReasonDTO.builder()
                 .message(message)
                 .code(code)
-                .isSuccess(false) // 실패이므로 false
+                .isSuccess(false)
                 .build();
     }
 
@@ -45,7 +56,7 @@ public enum ErrorStatus implements BaseErrorCode {
         return ErrorReasonDTO.builder()
                 .message(message)
                 .code(code)
-                .isSuccess(false) // 실패이므로 false
+                .isSuccess(false)
                 .httpStatus(httpStatus)
                 .build();
     }
