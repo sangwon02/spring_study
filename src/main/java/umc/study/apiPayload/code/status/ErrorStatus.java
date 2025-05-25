@@ -10,32 +10,35 @@ import umc.study.apiPayload.code.ErrorReasonDTO;
 @AllArgsConstructor
 public enum ErrorStatus implements BaseErrorCode {
 
-    // 일반 응답
+    // == 일반 응답 ==
     _INTERNAL_SERVER_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "COMMON500", "서버 에러, 관리자에게 문의 바랍니다."),
     _BAD_REQUEST(HttpStatus.BAD_REQUEST,"COMMON400","잘못된 요청입니다."),
     _UNAUTHORIZED(HttpStatus.UNAUTHORIZED,"COMMON401","인증이 필요합니다."),
     _FORBIDDEN(HttpStatus.FORBIDDEN, "COMMON403", "금지된 요청입니다."),
 
-    // 멤버 관련 에러
+    // == 멤버 관련 에러 ==
     MEMBER_NOT_FOUND(HttpStatus.BAD_REQUEST, "MEMBER4001", "사용자가 없습니다."),
     NICKNAME_NOT_EXIST(HttpStatus.BAD_REQUEST, "MEMBER4002", "닉네임은 필수 입니다."),
 
-    // 예시
+    // == 예시 ==
     ARTICLE_NOT_FOUND(HttpStatus.NOT_FOUND, "ARTICLE4001", "게시글이 없습니다."),
 
-    // Temp 관련 에러
+    // == Temp 관련 에러 ==
     TEMP_EXCEPTION(HttpStatus.BAD_REQUEST, "TEMP4001", "이거는 테스트"),
 
-    // 음식 카테고리 관련 에러
+    // == 음식 카테고리 관련 에러 ==
     FOOD_CATEGORY_NOT_FOUND(HttpStatus.NOT_FOUND, "FOODCATEGORY4001", "해당 음식 카테고리를 찾을 수 없습니다."),
 
-    // 가게 관련 에러 (예시 - 리뷰 추가 시 사용)
+    // == 가게 관련 에러 ==
     STORE_NOT_FOUND(HttpStatus.NOT_FOUND, "STORE4001", "가게를 찾을 수 없습니다."),
 
-    // 미션 관련 에러 (신규 추가)
+    // == 미션 관련 에러 ==
     MISSION_NOT_FOUND(HttpStatus.NOT_FOUND, "MISSION4001", "해당 미션을 찾을 수 없습니다."),
     STORE_NOT_LINKED_TO_MISSION(HttpStatus.BAD_REQUEST, "MISSION4002", "해당 미션에 연결된 가게 정보가 없습니다."),
-    MISSION_ALREADY_ATTEMPTED(HttpStatus.BAD_REQUEST, "MISSION4003", "이미 도전 중이거나 완료한 미션입니다.");
+    MISSION_ALREADY_ATTEMPTED(HttpStatus.BAD_REQUEST, "MISSION4003", "이미 도전 중이거나 완료한 미션입니다."),
+
+    // == 페이지 관련 에러 (추가) ==
+    PAGE_LT_ONE(HttpStatus.BAD_REQUEST, "PAGE4001", "페이지 번호는 1 이상이어야 합니다.");
 
 
     private final HttpStatus httpStatus;

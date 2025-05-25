@@ -5,4 +5,5 @@ import umc.study.domain.mapping.Review;
 
 public interface ReviewQueryService {
     Page<Review> getReviewListByStore(Long storeId, int page);
+    Page<Review> getReviewListByUser(Long userId, int page);
 }

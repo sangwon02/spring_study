@@ -1,15 +1,14 @@
-package umc.study.domain.mapping; // 경로 확인
+package umc.study.domain.mapping;
 
 import jakarta.persistence.*;
 import lombok.*;
-import umc.study.domain.Mission; // 경로 확인
-import umc.study.domain.Store;  // Store 임포트 추가
-import umc.study.domain.User;   // 경로 확인
-import umc.study.domain.common.BaseEntity; // 경로 확인
-import umc.study.domain.enums.MissionStatus; // 경로 확인
+import umc.study.domain.Mission;
+import umc.study.domain.Store;
+import umc.study.domain.User;
+import umc.study.domain.common.BaseEntity;
+import umc.study.domain.enums.MissionStatus;
 
 @Entity
-// @Table(name = "member_mission") // 실제 테이블 이름이 membermission 이면 제거 또는 수정
 @Getter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)

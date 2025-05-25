@@ -11,7 +11,6 @@ import umc.study.apiPayload.code.ReasonDTO;
 public enum SuccessStatus implements BaseCode {
 
     _OK(HttpStatus.OK, "COMMON200", "성공입니다.");
-    // 다른 성공 코드 추가 가능
 
     private final HttpStatus httpStatus;
     private final String code;
