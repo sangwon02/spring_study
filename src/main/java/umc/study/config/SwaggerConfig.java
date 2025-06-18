@@ -1,7 +1,10 @@
 package umc.study.config;
 
+import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Info;
+import io.swagger.v3.oas.models.security.SecurityRequirement;
+import io.swagger.v3.oas.models.security.SecurityScheme;
 import io.swagger.v3.oas.models.servers.Server;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -13,23 +16,24 @@ public class SwaggerConfig {
     public OpenAPI UMCStudyAPI() {
         Info info = new Info()
                 .title("UMC Study API")
-                .description("UMC 8기 Spring Study API 명세서입니다.") // 버전 정보 업데이트 (예시)
+                .description("UMC 8기 Spring Study API 명세서입니다.")
                 .version("1.0.0");
 
-        // JWT 관련 SecurityRequirement 및 Components 설정 부분 제거
-        // String jwtSchemeName = "JWT 토큰";
-        // SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
-        // Components components = new Components()
-        //         .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
-        //                 .name(jwtSchemeName)
-        //                 .type(SecurityScheme.Type.HTTP)
-        //                 .scheme("bearer")
-        //                 .bearerFormat("JWT"));
+        // JWT 인증 설정을 위한 SecurityScheme 정의
+        String jwtSchemeName = "JWT TOKEN";
+        SecurityRequirement securityRequirement = new SecurityRequirement().addList(jwtSchemeName);
+        Components components = new Components()
+                .addSecuritySchemes(jwtSchemeName, new SecurityScheme()
+                        .name(jwtSchemeName)
+                        .type(SecurityScheme.Type.HTTP) // HTTP 인증 방식
+                        .scheme("bearer")               // Bearer 토큰 스킴
+                        .bearerFormat("JWT"));          // 토큰 형식
 
+        // 기존 OpenAPI 객체에 Security 설정 추가
         return new OpenAPI()
                 .addServersItem(new Server().url("/"))
-                .info(info);
-        // .addSecurityItem(securityRequirement) // JWT 관련 부분 제거
-        // .components(components); // JWT 관련 부분 제거
+                .info(info)
+                .addSecurityItem(securityRequirement)
+                .components(components);
     }
 }

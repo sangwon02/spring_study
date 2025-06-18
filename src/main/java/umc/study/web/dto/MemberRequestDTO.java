@@ -27,7 +27,6 @@ public class MemberRequestDTO {
         @NotNull
         Integer gender;
 
-        // >> 이 부분을 다시 추가합니다! <<
         @NotNull
         Integer birthYear;
 
@@ -36,7 +35,6 @@ public class MemberRequestDTO {
 
         @NotNull
         Integer birthDay;
-        // >> 여기까지 추가 <<
 
         @Size(min = 5, max = 12)
         String address;
@@ -48,5 +46,16 @@ public class MemberRequestDTO {
 
         @NotNull
         Role role;
+    }
+
+    @Getter
+    @Setter
+    public static class LoginRequestDTO {
+        @NotBlank(message = "이메일은 필수입니다.")
+        @Email(message = "올바른 이메일 형식이어야 합니다.")
+        private String email;
+
+        @NotBlank(message = "패스워드는 필수입니다.")
+        private String password;
     }
 }

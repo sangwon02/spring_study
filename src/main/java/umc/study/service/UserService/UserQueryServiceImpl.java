@@ -1,22 +1,41 @@
 package umc.study.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import umc.study.apiPayload.code.status.ErrorStatus;
+import umc.study.apiPayload.exception.handler.UserHandler;
+import umc.study.config.security.jwt.JwtTokenProvider;
+import umc.study.converter.MemberConverter;
+import umc.study.domain.User;
 import umc.study.repository.UserRepository.UserRepository;
+import umc.study.web.dto.MemberResponseDTO;
 import umc.study.web.dto.MyPageInfoDTO;
 
 @Service
-@RequiredArgsConstructor // 생성자 주입 (Lombok)
-@Transactional(readOnly = true) // 조회 메서드이므로 readOnly 적용
-public class UserQueryServiceImpl implements UserQueryService { // 인터페이스 구현 명시
+@RequiredArgsConstructor
+@Transactional(readOnly = true)
+public class UserQueryServiceImpl implements UserQueryService {
 
-    private final UserRepository userRepository; // Repository 주입
+    private final UserRepository userRepository;
+    private final JwtTokenProvider jwtTokenProvider;
 
-    @Override // 인터페이스 메서드 구현 명시
+    @Override
     public MyPageInfoDTO getMyPageInfo(Long userId) {
-        // Repository의 커스텀 메서드를 호출하고, 결과가 없으면 예외 발생 (예시)
         return userRepository.findMyPageInfoById(userId)
                 .orElseThrow(() -> new RuntimeException("사용자를 찾을 수 없습니다. ID: " + userId));
+    }
+
+    @Override
+    public MemberResponseDTO.MemberInfoDTO getMemberInfo(HttpServletRequest request) {
+        Authentication authentication = jwtTokenProvider.extractAuthentication(request);
+        String email = authentication.getName();
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserHandler(ErrorStatus.MEMBER_NOT_FOUND));
+
+        return MemberConverter.toMemberInfoDTO(user);
     }
 }
