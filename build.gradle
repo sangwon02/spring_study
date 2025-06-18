@@ -9,6 +9,7 @@ plugins {
 group = 'umc'
 version = '0.0.1-SNAPSHOT'
 
+
 // 자바 설정
 java {
 	toolchain {
@@ -39,6 +40,14 @@ dependencies {
 	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 
+	// 보안 설정을 위한 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	testImplementation 'org.springframework.security:spring-security-test'
+
+	// 타임 리프를 위한 의존성
+	implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+
+	implementation 'org.thymeleaf.extras:thymeleaf-extras-springsecurity6'
 	// MySQL 드라이버
 	runtimeOnly 'mysql:mysql-connector-java:8.0.33'
 

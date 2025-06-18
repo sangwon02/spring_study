@@ -43,11 +43,15 @@ public class QUser extends EntityPathBase<User> {
 
     public final BooleanPath notificationStatus = createBoolean("notificationStatus");
 
+    public final StringPath password = createString("password");
+
     public final StringPath phonenumber = createString("phonenumber");
 
     public final NumberPath<Integer> point = createNumber("point", Integer.class);
 
     public final ListPath<umc.study.domain.mapping.Review, umc.study.domain.mapping.QReview> reviewList = this.<umc.study.domain.mapping.Review, umc.study.domain.mapping.QReview>createList("reviewList", umc.study.domain.mapping.Review.class, umc.study.domain.mapping.QReview.class, PathInits.DIRECT2);
+
+    public final EnumPath<umc.study.domain.enums.Role> role = createEnum("role", umc.study.domain.enums.Role.class);
 
     public final EnumPath<umc.study.domain.enums.SocialType> socialType = createEnum("socialType", umc.study.domain.enums.SocialType.class);
 

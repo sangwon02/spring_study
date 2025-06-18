@@ -1,33 +1,52 @@
 package umc.study.web.dto;
 
-import lombok.Getter;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import umc.study.validation.annotation.ExistCategories; // 어노테이션 import
+import lombok.Getter;
+import lombok.Setter;
+import umc.study.domain.enums.Role;
 import java.util.List;
 
 public class MemberRequestDTO {
 
     @Getter
+    @Setter
     public static class JoinDto {
         @NotBlank
         String name;
+
+        @NotBlank
+        @Email
+        String email;
+
+        @NotBlank
+        String password;
+
         @NotNull
         Integer gender;
+
+        // >> 이 부분을 다시 추가합니다! <<
         @NotNull
         Integer birthYear;
+
         @NotNull
         Integer birthMonth;
+
         @NotNull
         Integer birthDay;
-        @NotBlank
+        // >> 여기까지 추가 <<
+
+        @Size(min = 5, max = 12)
         String address;
-        @NotBlank
+
+        @Size(min = 5, max = 12)
         String specAddress;
 
-        @ExistCategories // 어노테이션 추가
-        @Size(min = 1, max = 5)
         List<Long> preferCategory;
+
+        @NotNull
+        Role role;
     }
 }

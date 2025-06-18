@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import umc.study.domain.common.BaseEntity;
 import umc.study.domain.enums.Gender;
+import umc.study.domain.enums.Role;
 import umc.study.domain.enums.SocialType;
 import umc.study.domain.mapping.MemberAgree;
 import umc.study.domain.mapping.MemberMission;
@@ -45,12 +46,21 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "VARCHAR(10)")
     private SocialType socialType;
 
-    @Column(length = 50)
+    @Column(nullable = false, unique = true, length = 50)
     private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
+
+    public void encodePassword(String password) {
+        this.password = password;
+    }
 
     private Integer point;
 
-    // SQL DATETIME -> LocalDate 변경 (일반적으로 날짜만 저장)
     private LocalDate birthdate;
 
     @Column(length = 15)
@@ -59,7 +69,6 @@ public class User extends BaseEntity {
     @Column(columnDefinition = "TINYINT(1)")
     private Boolean notificationStatus;
 
-    // 연관관계 (Review, UserFavorCategory, UserNotification, MemberMission, MemberAgree)
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Review> reviewList = new ArrayList<>();
 

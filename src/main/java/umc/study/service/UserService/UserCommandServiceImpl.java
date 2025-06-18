@@ -1,6 +1,7 @@
 package umc.study.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import umc.study.apiPayload.code.status.ErrorStatus;
@@ -25,17 +26,22 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-@Transactional // 클래스 레벨에 @Transactional을 붙이면 모든 public 메서드에 적용됩니다.
+@Transactional
 public class UserCommandServiceImpl implements UserCommandService {
 
     private final UserRepository userRepository;
     private final FoodCategoryRepository foodCategoryRepository;
     private final MissionRepository missionRepository;
     private final MemberMissionRepository memberMissionRepository;
+    private final PasswordEncoder passwordEncoder; // 1. PasswordEncoder 의존성 주입 추가
 
     @Override
     public User joinUser(MemberRequestDTO.JoinDto request) {
         User newUser = MemberConverter.toUser(request);
+
+        // 2. 비밀번호 암호화 로직 추가
+        newUser.encodePassword(passwordEncoder.encode(request.getPassword()));
+
         List<Long> preferCategoryIds = request.getPreferCategory();
         if (preferCategoryIds != null && !preferCategoryIds.isEmpty()) {
             List<FoodCategory> foodCategoryList = preferCategoryIds.stream()
@@ -54,14 +60,11 @@ public class UserCommandServiceImpl implements UserCommandService {
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MEMBER_NOT_FOUND));
         Mission mission = missionRepository.findById(missionId)
                 .orElseThrow(() -> new GeneralException(ErrorStatus.MISSION_NOT_FOUND));
-        Store store = mission.getStore(); // Mission 엔티티에 getStore()가 있다고 가정
+        Store store = mission.getStore();
         if (store == null) {
-            // Mission 엔티티 설계상 store가 null일 수 없도록 NOT NULL 제약조건이 있다면 이 검사는 불필요
-            // 하지만 DDL에서 Mission의 store_id가 NOT NULL이므로, mission.getStore()는 null을 반환하지 않아야 정상
             throw new GeneralException(ErrorStatus.STORE_NOT_LINKED_TO_MISSION);
         }
 
-        // MemberMissionRepository에 해당 메서드가 정의되어 있어야 함
         boolean alreadyExists = memberMissionRepository.existsByUserAndMission(user, mission);
         if (alreadyExists) {
             throw new GeneralException(ErrorStatus.MISSION_ALREADY_ATTEMPTED);
@@ -70,7 +73,7 @@ public class UserCommandServiceImpl implements UserCommandService {
         MemberMission newMemberMission = MemberMission.builder()
                 .user(user)
                 .mission(mission)
-                .store(store) // MemberMission에 Store도 직접 연관관계로 설정
+                .store(store)
                 .status(MissionStatus.CHALLENGING)
                 .build();
         return memberMissionRepository.save(newMemberMission);
